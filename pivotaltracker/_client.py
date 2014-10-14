@@ -1,6 +1,7 @@
 import urllib
 import urllib2
 from xml.dom import minidom
+import json
 
 
 class Client(object):
@@ -14,7 +15,7 @@ class Client(object):
         these options by setting 'secure' or 'parse_xml' to False"""
         self.__token = token
         protocol = "https" if secure else "http"
-        self.__base_url = "%(protocol)s://www.pivotaltracker.com/services/v2/" % dict(protocol=protocol)
+        self.__base_url = "%(protocol)s://www.pivotaltracker.com/services/v5/" % dict(protocol=protocol)
         self.__parse_xml = parse_xml
         
     def get_project(self, project_id):
@@ -29,7 +30,7 @@ class Client(object):
         """gets an individual story"""
         return self.__remote_http_get("projects/%s/stories/%s" % (project_id, story_id))
     
-    def get_stories(self, project_id, query=None, limit=None, offset=None):
+    def get_stories(self, project_id, query=None, limit=None, offset=None, fields=None):
         """gets stories from a project.  These stories can be filtered via 'query', and
         paginated via 'limit' and 'offset'"""
         params = {}
@@ -39,6 +40,8 @@ class Client(object):
             params["limit"] = limit
         if offset:
             params["offset"] = offset
+        if fields:
+            params['fields'] = fields
         if params:
             # we have parameters to send
             encoded_params = urllib.urlencode(params)
@@ -219,11 +222,8 @@ class Client(object):
     def __perform_request(self, req):
         try:
             response = urllib2.urlopen(req)
-            dom = minidom.parseString(response.read())
-            if self.__parse_xml:
-                return self.__xml_to_dictionary(dom)
-            else:
-                return dom
+            return json.loads(response.read())
+
         except urllib2.HTTPError, e:
             if e.code == 422:
                 dom = minidom.parseString(e.read())

@@ -1,15 +1,15 @@
 import os
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name="pivotaltracker",
     packages=["pivotaltracker"],
-    version="0.0.4",
+    version="0.0.5",
     license="BSD",
-    author="Matt Pizzimenti",
+    author="Matt Pizzimenti, Chris Perkins",
     author_email="mjpizz+pivotaltracker@gmail.com",
     url="http://pypi.python.org/pypi/pivotaltracker/",
-    install_requires=["PyYAML"],
+    #install_requires=["PyYAML"],
     # install_recommends=[],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -27,10 +27,10 @@ setup(
     ],
     description="pivotaltracker is a Pythonic wrapper around the PivotalTracker API",
     long_description=open(os.path.join(os.path.dirname(__file__), "README.rst")).read(),
-    entry_points='''
-[console_scripts]
-pt = pivotaltracker.tool:run
-''',
+#    entry_points='''
+#[console_scripts]
+#pt = pivotaltracker.tool:run
+#''',
     # zip_safe=False,
     # cmdclass=cmdclass,
     # ext_modules=ext_modules,
