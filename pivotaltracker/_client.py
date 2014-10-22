@@ -11,6 +11,10 @@ class Client(object):
         protocol = "https" if secure else "http"
         self.__base_url = "%(protocol)s://www.pivotaltracker.com/services/v5/" % dict(protocol=protocol)
 
+    def get_memberships(self, project_id):
+        return self.__remote_http_get("projects/%s/memberships" % project_id)
+
+
     def get_project(self, project_id):
         """gets a project from the tracker"""
         return self.__remote_http_get("projects/%s" % project_id)
