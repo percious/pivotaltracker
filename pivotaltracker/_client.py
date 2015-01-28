@@ -65,24 +65,45 @@ class Client(object):
         """gets backlog from a project.  These iterations can be paginated via 'limit' and 'offset'"""
         return self.__iterations_request_helper(sub_url="iterations/backlog", project_id=project_id, limit=limit, offset=offset)
 
+    def __get_story_json(self,
+                         project_id,
+                         name=None,
+                         description=None,
+                         requested_by=None,
+                         story_type=None,
+                         estimate=None,
+                         current_state=None,
+                         labels=None):
 
-    def __get_story_json(project_id, name, description, requested_by, story_type, estimate, current_state, labels):
-        return {'name': name,
-                'description': description,
-                'requested_by': requested_by,
-                'story_type': story_type,
-                'estimate': estimate,
-                'current_state': current_state,
-                'labels': labels}
+        d = {}
+        if name is not None:
+            d['name'] = name
+        if name is not None:
+            d['description'] = description
+        if name is not None:
+            d['requested_by'] = requested_by
+        if name is not None:
+            d['story_type'] = story_type
+        if name is not None:
+            d['estimate'] = estimate
+        if name is not None:
+            d['current_state'] = current_state
+        if name is not None:
+            d['labels'] = labels
+
+        return d
+
+    def delete_label(self, project_id, story_id, label_id):
+        self.__remote_http_delete("projects/%s/stories/%s/labels/%s" % (project_id, story_id, label_id))
 
     def add_story(self, project_id, name, description, story_type, requested_by=None, estimate=None, current_state=None, labels=None):
         """adds a story to a project"""
-        data = self.__get_story_dict(project_id, name, description, requested_by, story_type, estimate, current_state, labels)
+        data = self.__get_story_json(project_id, name, description, requested_by, story_type, estimate, current_state, labels)
         return self.__remote_http_post("projects/%s/stories" % project_id, data=data)
     
     def update_story(self, project_id, story_id, name=None, description=None, requested_by=None, story_type=None, estimate=None, current_state=None, labels=None):
         """updates a story in a project"""
-        data = self.__get_story_dict(project_id, name, description, requested_by, story_type, estimate, current_state, labels)
+        data = self.__get_story_json(project_id, name, description, requested_by, story_type, estimate, current_state, labels)
         return self.__remote_http_put("projects/%s/stories/%s" % (project_id, story_id), data=data)
     
     def delete_story(self, project_id, story_id):
